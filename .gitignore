@@ -41,4 +41,4 @@ luac.out
 
 # VS code
 *.code-workspace
-scripts
+.vscode
