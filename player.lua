@@ -1,7 +1,7 @@
 local animation = require"animation"
 local player = {x = 30, y = 30}
 local speedX, speedY = 0, 0
-local maxspeed, acceleration = 4, 200
+local maxspeed = 18
 local floor = math.floor
 
 player.motion = animation.newAnimation(love.graphics.newImage("player.png"), 10, 20, 0.4)
@@ -13,20 +13,17 @@ function player.update(dt)
 	end
 	
 	if love.keyboard.isDown("w") then
-		speedY = (speedY > -maxspeed) and speedY - 200 * dt or -maxspeed
+		player.y = player.y - maxspeed * dt
 	end
 	if love.keyboard.isDown("s") then
-		speedY = (speedY < maxspeed) and speedY + 200 * dt or maxspeed
+		player.y = player.y + maxspeed * dt
 	end
 	if love.keyboard.isDown("a") then
-		speedX = (speedX > -maxspeed) and speedX - 200 * dt or -maxspeed
+		player.x = player.x - maxspeed * dt
 	end
 	if love.keyboard.isDown("d") then
-		speedX = (speedX < maxspeed) and speedX + 200 * dt or maxspeed
+		player.x = player.x + maxspeed * dt
 	end
-	speedX, speedX = speedX * 0.00001 * dt, speedY * 0.00001 * dt
-
-	player.x, player.y = player.x + speedX * dt, player.y + speedY * dt
 end
 
 function player.draw()
