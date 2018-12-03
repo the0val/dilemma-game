@@ -1,5 +1,6 @@
 local player = require("player")
 local scene, backgroundCanvas, playerCanvas
+local font
 
 function love.load()
 	love.graphics.setDefaultFilter("nearest", "nearest")
@@ -7,6 +8,8 @@ function love.load()
 	scene = love.graphics.newImage("scene.png")
 	backgroundCanvas = love.graphics.newCanvas(200, 150)
 
+	font = love.graphics.newFont("disposabledroid-bb.regular.ttf",30)
+	love.graphics.setFont(font)
 end
 
 function love.draw()
@@ -16,6 +19,7 @@ function love.draw()
 	love.graphics.setCanvas()
 	love.graphics.draw(backgroundCanvas, 0, 0, 0, 4, 4)
 
+	love.graphics.print("Hello World!",10,10)
 end
 
 function love.update(dt)
