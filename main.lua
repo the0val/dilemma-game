@@ -1,27 +1,37 @@
-local player = require("player")
-local scene, backgroundCanvas, playerCanvas
-local font
+local player, scene, font
+local lg = love.graphics
 
 function love.load()
-	love.graphics.setDefaultFilter("nearest", "nearest")
-	love.window.setMode(800, 600, {})
-	scene = love.graphics.newImage("scene.png")
-	backgroundCanvas = love.graphics.newCanvas(200, 150)
+	lg.setDefaultFilter("nearest", "nearest")
+	player = require"player"
+	scene = lg.newImage("scene.png")
+	_G.sceneTranslation = 0
 
-	font = love.graphics.newFont("disposabledroid-bb.regular.ttf",30)
-	love.graphics.setFont(font)
+	font = lg.newFont("disposabledroid-bb.regular.ttf",30)
+	lg.setFont(font)
 end
 
 function love.draw()
-	love.graphics.setCanvas(backgroundCanvas)
-	love.graphics.draw(scene, 0, 0)
-	player.draw()
-	love.graphics.setCanvas()
-	love.graphics.draw(backgroundCanvas, 0, 0, 0, 4, 4)
+	
+	-- Main screen
+	lg.push()
+	lg.scale(4, 4)
 
-	love.graphics.print("Hello World!",10,10)
+	lg.draw(scene, sceneTranslation % 200, 0)
+	lg.draw(scene, (sceneTranslation % 200) - 200, 0)
+
+	player.draw()
+	lg.pop()
+
+
 end
 
 function love.update(dt)
 	player.update(dt)
+end
+
+function love.keypressed(key)
+	if key == "escape" then
+		love.event.quit()
+	end
 end
