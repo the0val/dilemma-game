@@ -9,6 +9,8 @@ function love.load()
 
 	font = lg.newFont("disposabledroid-bb.regular.ttf",30)
 	lg.setFont(font)
+
+	love.window.setTitle("Dilemmas")
 end
 
 function love.draw()
