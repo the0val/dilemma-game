@@ -1,29 +1,18 @@
 local player, scene, font, pedo, granny, choose, bubble, girl
 local lg = love.graphics
 local vanPos, hasPassedVan = 250, false
-local cutscene, curScene = false, ""
+local cutscene, currentScene = false, ""
 local menus = {}
 
 local function displayChoice(texts)
 	lg.draw(choose, 2, 20)
 	lg.pop()
 	for i = 1, 5 do
-		lg.printf({{0, 0, 0, 1}, texts[i]}, 20, (1.5 + 21 * i) * 4, 400)
+		lg.printf({{0, 0, 0, 1}, texts[i]}, 20, 6 + 21 * i * 4, 400)
 	end
 	lg.push()
 	lg.scale(4, 4)
 end
-
-menus = {van = {draw = function()
-		lg.push()
-		lg.scale(4, 4)
-		lg.draw(bubble, vanPos + sceneTranslation, 58)
-		displayChoice(menus.van)
-		player.draw()
-		lg.pop()
-		lg.printf({{0, 0, 0, 1},"Come here little girl!"}, (vanPos + sceneTranslation) * 4 + 20, 60 * 4, 150)
-	end,
-	"Keep walking", "Confront the man", "Talk to the girl", "Call police", "Pull out gun"}}
 
 function love.load()
 	lg.setDefaultFilter("nearest", "nearest")
@@ -39,8 +28,6 @@ function love.load()
 
 	font = lg.newFont("disposabledroid-bb.regular.ttf", 30)
 	lg.setFont(font)
-
-	love.window.setTitle("Dilemmas")
 end
 
 function love.draw()
@@ -61,7 +48,7 @@ function love.draw()
 		lg.pop()
 	else
 		lg.pop()
-		menus[curScene].draw()
+		menus[currentScene].draw()
 	end
 	local pX, pY = player.getPos()
 	lg.print(pX, 4, 4)
@@ -72,7 +59,7 @@ function love.update(dt)
 	local pX, pY = player.getPos()
 	if (not hasPassedVan) and pX >= vanPos + 20 then
 		cutscene = true
-		curScene = "van"
+		currentScene = "van"
 		player.maxSpeed = 0
 	elseif hasPassedVan then
 		player.maxSpeed = 18
