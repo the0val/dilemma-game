@@ -1,13 +1,12 @@
 local animation = require"animation"
-local player = {x = 50, y = 110, isMoving = false}
-local maxSpeed = 18
+local player = {x = 110, y = 110, isMoving = false, maxSpeed = 28}
 local floor = math.floor
 local sprite = love.graphics.newImage("player.png")
 player.motion = animation.newAnimation(sprite, 10, 20, 0.4)
 
 local function collide()
 	player.y = player.y <= 150 - sprite:getHeight() and player.y or 150 - sprite:getHeight()
-	player.y = player.y >= 70 and player.y or 70
+	player.y = player.y >= 87 and player.y or 87
 	
 	
 	if player.x > 195 - sprite:getWidth() then
@@ -30,19 +29,19 @@ function player.update(dt)
 	
 	player.isMoving = false
 	if love.keyboard.isDown("w") then
-		player.y = player.y - maxSpeed * dt
+		player.y = player.y - player.maxSpeed * dt
 		player.isMoving = true
 	end
 	if love.keyboard.isDown("s") then
-		player.y = player.y + maxSpeed * dt
+		player.y = player.y + player.maxSpeed * dt
 		player.isMoving = true
 	end
 	if love.keyboard.isDown("a") then
-		player.x = player.x - maxSpeed * dt * 1.5
+		player.x = player.x - player.maxSpeed * dt * 1.5
 		player.isMoving = true
 	end
 	if love.keyboard.isDown("d") then
-		player.x = player.x + maxSpeed * dt * 1.5
+		player.x = player.x + player.maxSpeed * dt * 1.5
 		player.isMoving = true
 	end
 
@@ -55,7 +54,7 @@ function player.draw()
 end
 
 function player.getPos()
-	return player.x + sceneTranslation, player.y
+	return player.x - sceneTranslation, player.y
 end
 
 return player
