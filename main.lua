@@ -1,4 +1,4 @@
-local player, scene, font, pedo, granny, choose, bubble, girl
+local player, scene, font, pedo, granny, choose, bubble, girl, button, cutscene
 local recX, recY = 0, 0
 local lg = love.graphics
 local vanPos, hasPassedVan = 250, false
@@ -20,6 +20,7 @@ function love.load()
 
 	button = require"button"
 	player = require"player"
+	cutscene = require"cutscene"
 	_G.sceneTranslation = 0
 
 	scene = lg.newImage("scene.png")
@@ -100,7 +101,7 @@ function love.update(dt)
 		player.maxSpeed = 18
 	end
 
-	cutscene.update()
+	cutscene.updateScene(dt)
 end
 
 function love.keypressed(key)
