@@ -13,6 +13,13 @@ function simpleAnimate.newAnimation(image, width, height, duration)
 		end
 	end
 
+	function animation:update(dt)
+		self.currentTime = self.currentTime + dt
+		if self.currentTime >= self.duration then
+			self.currentTime = self.currentTime - self.duration
+		end
+	end
+
 	return animation
 end
 
