@@ -1,8 +1,7 @@
-local player, animation, scene, font, pedo, granny, choose, bubble, girl, button, cutscene, kickAni, drug
-local drugrun = false
-local recX, recY = 0, 0 -- DEBUG
+local player, animation, scene, font, pedo, robbery, choose, bubble, girl, button, cutscene, kickAni, drug
+local drugrun, trainrun = false, false
 local lg = love.graphics
-local hasPassed, vanPos, kickPos, drugPos, robberPos, trainPos, endPos = "none", 250, 400, 540, 620, 700, 740
+local hasPassed, vanPos, kickPos, drugPos, robberPos, trainPos, endPos = "none", 250, 400, 540, 620, 700, 740, 740
 local isCutscene, currentScene = false, ""
 local kicking = "active"
 local menus = {}
@@ -30,7 +29,7 @@ function love.load()
 
 	scene = lg.newImage("scene.png")
 	pedo = lg.newImage("pedovan.png")
-	granny = lg.newImage("granny.png")
+	robbery = lg.newImage("robbery.png")
 	choose = lg.newImage("choose.png")
 	bubble = lg.newImage("speech.png")
 	girl = lg.newImage("girl.png")
@@ -39,6 +38,7 @@ function love.load()
 	drug = lg.newImage("dealing.png")
 	holdgun = lg.newImage("holdgun.png")
 	holdphone = lg.newImage("holdphone.png")
+	train = lg.newImage("trainup.png")
 
 
 	-- load scenes
@@ -52,20 +52,29 @@ function love.load()
 			end
 			menus[s1].buttons.enabled = false
 			if s2 == 4 or (s1 == "kick" and s2 == 3) then player.changeImage(holdphone, 1) end
-			if s1 == "train" then
-				if s2 == 2 then killCount = killCount + 1
-				else killCount = killCount + 3 end 
-			elseif s2 == 5 then
-				if s1 == "van" or s1 == "robber" then killCount = killCount + 1
+			if s2 == 5 then
+				if s1 == "van" or s1 == "robbery" or s1 == "kick" then killCount = killCount + 1
 				else killCount = killCount + 2 end
 			end
-			if s1 == "kick" and s2 == 3 then kicking = "stop" end
+			if s1 == "kick" and s2 == 4 then kicking = "stop" end
 			if s2 == 5 then
 				player.changeImage(holdgun, 1)
 				if s1 == "van" then pedo = lg.newImage("shotdriver.png")
 				elseif s1 == "kick" then kicking = "dead"
 				elseif s1 == "drug" then drug = lg.newImage("dealdead.png")
-				end --TODO tomorrow
+				elseif s1 == "robbery" then robbery = lg.newImage("robberdead.png")
+				elseif s1 == "train" then train = lg.newImage("shottrain.png") killCount = killCount + 3
+				end
+			end
+			if s1 == "train" then
+				if s2 == 1 or s2 == 3 or s2 == 4 then
+					train = lg.newImage("trainabove.png")
+					killCount = killCount + 3
+				elseif s2 == 2 then
+					train = lg.newImage("trainbelow.png")
+					killCount = killCount + 1
+				end
+				if s2 == 3 then trainrun = true end
 			end
 			-- cutscene.activateScene(s1 .. tostring(s2))
 		end
@@ -123,20 +132,20 @@ function love.load()
 			}
 		}
 
-		menus.robber = {draw = function()
+		menus.robbery = {draw = function()
 				lg.push()
 				lg.scale(4, 4)
-				displayChoice("robber")
+				displayChoice("robbery")
 				player.draw()
 				lg.pop()
 			end,
 			"Nothing", "Try to talk", "Save granny", "Call police", "Shoot him",
 			buttons = button.initList{
-				button.newButton(8, 80, 300, 75, f, {"robber", 1}),
-				button.newButton(8, 164, 300, 75, f, {"robber", 2}),
-				button.newButton(8, 248, 300, 75, f, {"robber", 3}),
-				button.newButton(8, 332, 300, 75, f, {"robber", 4}),
-				button.newButton(8, 416, 300, 75, f, {"robber", 5})
+				button.newButton(8, 80, 300, 75, f, {"robbery", 1}),
+				button.newButton(8, 164, 300, 75, f, {"robbery", 2}),
+				button.newButton(8, 248, 300, 75, f, {"robbery", 3}),
+				button.newButton(8, 332, 300, 75, f, {"robbery", 4}),
+				button.newButton(8, 416, 300, 75, f, {"robbery", 5})
 			}
 		}
 
@@ -189,7 +198,8 @@ function love.draw()
 	end
 
 	lg.draw(drug, drugPos + sceneTranslation, 80)
-	lg.draw(granny, robberPos + sceneTranslation + 5, 85)
+	lg.draw(robbery, robberPos + sceneTranslation + 5, 85)
+	lg.draw(train, trainPos + sceneTranslation, 85)
 
 
 	if not isCutscene then
@@ -201,6 +211,8 @@ function love.draw()
 	end
 
 	cutscene.draw()
+	
+	local pX, pY = player.getPos()
 
 	if hasPassed == "train" and pX >= endPos then
 		lg.clear(0, 0, 0, 1)
@@ -217,10 +229,9 @@ function love.draw()
 		lg.print(endText, (800 - font:getWidth(endText)) / 2, 270)
 	end
 
-	-- DEBUG
-	lg.print(recX, 800 - font:getWidth(tostring(recX)), 5)
-	lg.print(recY, 800 - font:getWidth(tostring(recY)), 25)
-	lg.print(tostring(glenn), 800 - font:getWidth(tostring(glenn)), 50)
+	if glenn then
+		lg.print("Made for Glenn", 5, 5)
+	end
 end
 
 function love.update(dt)
@@ -244,12 +255,17 @@ function love.update(dt)
 		player.maxSpeed = 0
 	elseif hasPassed == "drug" and pX >= robberPos + 10 then
 		isCutscene = true
-		currentScene = "robber"
-		menus.robber.buttons.enabled = true
+		currentScene = "robbery"
+		menus.robbery.buttons.enabled = true
+		player.maxSpeed = 0
+	elseif hasPassed == "robbery" and pX >= trainPos - 5 then
+		isCutscene = true
+		currentScene = "train"
+		menus.train.buttons.enabled = true
 		player.maxSpeed = 0
 	else
 		player.maxSpeed = 18
-		if hasPassed == "drug" and drugrun then
+		if (hasPassed == "drug" and drugrun) or (hasPassed == "train" and trainrun) then
 			player.maxSpeed = 50
 		end
 	end
