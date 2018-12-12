@@ -1,4 +1,4 @@
-local player, animation, scene, font, pedo, robbery, choose, bubble, girl, button, cutscene, kickAni, drug
+local player, animation, scene, font, pedo, robbery, choose, bubble, girl, button, kickAni, drug
 local drugrun, trainrun = false, false
 local lg = love.graphics
 local hasPassed, vanPos, kickPos, drugPos, robberPos, trainPos, endPos = "none", 250, 400, 540, 620, 700, 740, 740
@@ -23,22 +23,21 @@ function love.load()
 
 	button = require"button"
 	player = require"player"
-	cutscene = require"cutscene"
 	animation = require"animation"
 	_G.sceneTranslation = 0
 
-	scene = lg.newImage("scene.png")
-	pedo = lg.newImage("pedovan.png")
-	robbery = lg.newImage("robbery.png")
-	choose = lg.newImage("choose.png")
-	bubble = lg.newImage("speech.png")
-	girl = lg.newImage("girl.png")
-	kickAni = animation.newAnimation(lg.newImage("kick.png"), 15, 17, 0.3)
-	kickDead = lg.newImage("kickerdead.png")
-	drug = lg.newImage("dealing.png")
-	holdgun = lg.newImage("holdgun.png")
-	holdphone = lg.newImage("holdphone.png")
-	train = lg.newImage("trainup.png")
+	scene = lg.newImage("Resources/scene.png")
+	pedo = lg.newImage("Resources/pedovan.png")
+	robbery = lg.newImage("Resources/robbery.png")
+	choose = lg.newImage("Resources/choose.png")
+	bubble = lg.newImage("Resources/speech.png")
+	girl = lg.newImage("Resources/girl.png")
+	kickAni = animation.newAnimation(lg.newImage("Resources/kick.png"), 15, 17, 0.3)
+	kickDead = lg.newImage("Resources/kickerdead.png")
+	drug = lg.newImage("Resources/dealing.png")
+	holdgun = lg.newImage("Resources/holdgun.png")
+	holdphone = lg.newImage("Resources/holdphone.png")
+	train = lg.newImage("Resources/trainup.png")
 
 
 	-- load scenes
@@ -59,24 +58,23 @@ function love.load()
 			if s1 == "kick" and s2 == 4 then kicking = "stop" end
 			if s2 == 5 then
 				player.changeImage(holdgun, 1)
-				if s1 == "van" then pedo = lg.newImage("shotdriver.png")
+				if s1 == "van" then pedo = lg.newImage("Resources/shotdriver.png")
 				elseif s1 == "kick" then kicking = "dead"
-				elseif s1 == "drug" then drug = lg.newImage("dealdead.png")
-				elseif s1 == "robbery" then robbery = lg.newImage("robberdead.png")
-				elseif s1 == "train" then train = lg.newImage("shottrain.png") killCount = killCount + 3
+				elseif s1 == "drug" then drug = lg.newImage("Resources/dealdead.png")
+				elseif s1 == "robbery" then robbery = lg.newImage("Resources/robberdead.png")
+				elseif s1 == "train" then train = lg.newImage("Resources/shottrain.png") killCount = killCount + 3
 				end
 			end
 			if s1 == "train" then
 				if s2 == 1 or s2 == 3 or s2 == 4 then
-					train = lg.newImage("trainabove.png")
+					train = lg.newImage("Resources/trainabove.png")
 					killCount = killCount + 3
 				elseif s2 == 2 then
-					train = lg.newImage("trainbelow.png")
+					train = lg.newImage("Resources/trainbelow.png")
 					killCount = killCount + 1
 				end
 				if s2 == 3 then trainrun = true end
 			end
-			-- cutscene.activateScene(s1 .. tostring(s2))
 		end
 		
 		menus.van = {draw = function()
@@ -168,7 +166,7 @@ function love.load()
 
 	end
 
-	font = lg.newFont("disposabledroid-bb.regular.ttf", 30)
+	font = lg.newFont("Resources/disposabledroid-bb.regular.ttf", 30)
 	lg.setFont(font)
 end
 
@@ -209,8 +207,6 @@ function love.draw()
 		lg.pop()
 		menus[currentScene].draw()
 	end
-
-	cutscene.draw()
 	
 	local pX, pY = player.getPos()
 
@@ -272,8 +268,6 @@ function love.update(dt)
 	if player.tmpImageDuration > 0 then
 		player.maxSpeed = 0
 	end
-
-	cutscene.updateScene(dt)
 end
 
 function love.keypressed(key)

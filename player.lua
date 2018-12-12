@@ -1,7 +1,7 @@
 local animation = require"animation"
 local player = {x = 110, y = 110, isMoving = false, maxSpeed = 28}
 local floor = math.floor
-local sprite = love.graphics.newImage("player.png")
+local sprite = love.graphics.newImage("Resources/player.png")
 local tmpImage
 player.tmpImageDuration = -1
 player.motion = animation.newAnimation(sprite, 10, 20, 0.4)
