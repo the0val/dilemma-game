@@ -2,6 +2,8 @@ local animation = require"animation"
 local player = {x = 110, y = 110, isMoving = false, maxSpeed = 28}
 local floor = math.floor
 local sprite = love.graphics.newImage("player.png")
+local tmpImage
+player.tmpImageDuration = -1
 player.motion = animation.newAnimation(sprite, 10, 20, 0.4)
 
 local function collide()
@@ -45,16 +47,27 @@ function player.update(dt)
 		player.isMoving = true
 	end
 
+	player.tmpImageDuration = player.tmpImageDuration - dt
+
 	collide()
 end
 
 function player.draw()
-	local spriteNum = player.isMoving and math.floor(player.motion.currentTime / player.motion.duration * #player.motion.quads) + 1 or 1
-	love.graphics.draw(player.motion.spriteSheet, player.motion.quads[spriteNum], floor(player.x + 0.5), floor(player.y + 0.5))
+	if player.tmpImageDuration > 0 then
+		love.graphics.draw(tmpImage, floor(player.x + 0.5), floor(player.y + 0.5))
+	else
+		local spriteNum = player.isMoving and math.floor(player.motion.currentTime / player.motion.duration * #player.motion.quads) + 1 or 1
+		love.graphics.draw(player.motion.spriteSheet, player.motion.quads[spriteNum], floor(player.x + 0.5), floor(player.y + 0.5))
+	end
 end
 
 function player.getPos()
 	return player.x - sceneTranslation, player.y
+end
+
+function player.changeImage(drawable, duration)
+	tmpImage = drawable
+	player.tmpImageDuration = duration
 end
 
 return player
