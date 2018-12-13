@@ -227,7 +227,6 @@ function love.draw()
 	if glenn then
 		lg.print("Made for Glenn", 5, 5)
 	end
-	lg.print(killCount, 5, 5) -- DEBUG tmp
 end
 
 function love.update(dt)
