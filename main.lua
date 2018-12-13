@@ -52,19 +52,18 @@ function love.load()
 			menus[s1].buttons.enabled = false
 			if s2 == 4 or (s1 == "kick" and s2 == 3) then player.changeImage(holdphone, 1) end
 			if s2 == 5 then
-				if s1 == "van" or s1 == "robbery" or s1 == "kick" then killCount = killCount + 1
-				else killCount = killCount + 2 end
-			end
-			if s1 == "kick" and s2 == 4 then kicking = "stop" end
-			if s2 == 5 then
 				player.changeImage(holdgun, 1)
-				if s1 == "van" then pedo = lg.newImage("Resources/shotdriver.png")
-				elseif s1 == "kick" then kicking = "dead"
-				elseif s1 == "drug" then drug = lg.newImage("Resources/dealdead.png")
-				elseif s1 == "robbery" then robbery = lg.newImage("Resources/robberdead.png")
-				elseif s1 == "train" then train = lg.newImage("Resources/shottrain.png") killCount = killCount + 3
+				if s1 == "drug" then killCount = killCount + 2; drug = lg.newImage("Resources/dealdead.png")
+				elseif s1 == "train" then killCount = killCount + 3; train = lg.newImage("Resources/shottrain.png")
+				else
+					killCount = killCount + 1
+					if s1 == "van" then pedo = lg.newImage("Resources/shotdriver.png")
+					elseif s1 == "kick" then kicking = "dead"
+					elseif s1 == "robbery" then robbery = lg.newImage("Resources/robberdead.png")
+					end
 				end
 			end
+			if s1 == "kick" and s2 == 4 then kicking = "stop" end
 			if s1 == "train" then
 				if s2 == 1 or s2 == 3 or s2 == 4 then
 					train = lg.newImage("Resources/trainabove.png")
@@ -228,6 +227,7 @@ function love.draw()
 	if glenn then
 		lg.print("Made for Glenn", 5, 5)
 	end
+	lg.print(killCount, 5, 5) -- DEBUG tmp
 end
 
 function love.update(dt)
