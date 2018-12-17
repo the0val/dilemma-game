@@ -165,6 +165,7 @@ function love.load()
 
 	end
 
+	normalFont = lg.newFont(30)
 	font = lg.newFont("Resources/disposabledroid-bb.regular.ttf", 30)
 	lg.setFont(font)
 end
@@ -225,7 +226,9 @@ function love.draw()
 	end
 
 	if glenn then
-		lg.print("Made for Glenn", 5, 5)
+		lg.setFont(normalFont)
+		lg.print("Glenn är bäst", 5, 5)
+		lg.setFont(font)
 	end
 end
 
