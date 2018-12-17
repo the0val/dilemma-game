@@ -30,19 +30,19 @@ function player.update(dt)
 	end
 	
 	player.isMoving = false
-	if love.keyboard.isDown("w") then
+	if love.keyboard.isDown("w", "up") then
 		player.y = player.y - player.maxSpeed * dt
 		player.isMoving = true
 	end
-	if love.keyboard.isDown("s") then
+	if love.keyboard.isDown("s", "down") then
 		player.y = player.y + player.maxSpeed * dt
 		player.isMoving = true
 	end
-	if love.keyboard.isDown("a") then
+	if love.keyboard.isDown("a", "left") then
 		player.x = player.x - player.maxSpeed * dt * 1.5
 		player.isMoving = true
 	end
-	if love.keyboard.isDown("d") then
+	if love.keyboard.isDown("d", "right") then
 		player.x = player.x + player.maxSpeed * dt * 1.5
 		player.isMoving = true
 	end
